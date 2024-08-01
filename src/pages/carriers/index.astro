@@ -1,0 +1,20 @@
+---
+// /blog/index.astro
+import { sanityClient } from 'sanity:client';
+
+const posts = await sanityClient.fetch(`*[_type == "carriers" && defined(slug)]`);
+---
+
+<h1>Carriers</h1>
+<ul>
+  {
+    // ts-ignore
+    posts.map((post: { slug: { current: string }; carrierName: string }) => (
+      <li>
+        <a href={'/carriers/' + post?.slug?.current} class="post-link">
+          {post.carrierName}
+        </a>
+      </li>
+    ))
+  }
+</ul>

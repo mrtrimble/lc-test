@@ -1,0 +1,47 @@
+---
+import { sanityClient } from 'sanity:client';
+
+interface Props {
+  newBusiness: object;
+  carrierName: string;
+  date: string;
+  brokerSupport: {
+    phone: string;
+    email: string;
+    fax: string;
+  };
+  producerPortal: string;
+  slug: {
+    current: string;
+  };
+  overnightMailingAddress: {
+    addressLine1: string;
+    addressLine2: string;
+  };
+  administrativeMailingAddress: {
+    addressLine1: string;
+    addressLine2: string;
+  };
+}
+
+export async function getStaticPaths() {
+  const posts = await sanityClient.fetch(`*[_type == "carriers"]`);
+
+  return posts.map(
+    ({ newBusiness, carrierName, date, brokerSupport, producerPortal, slug, overnightMailingAddress, administrativeMailingAddress }: Props) => {
+      return {
+        params: { slug: slug.current },
+        props: { newBusiness, carrierName, date, brokerSupport, producerPortal, slug, overnightMailingAddress, administrativeMailingAddress },
+      };
+    }
+  );
+}
+
+const { newBusiness, carrierName, date, brokerSupport, producerPortal, overnightMailingAddress, administrativeMailingAddress } = Astro.props;
+---
+
+<h1>{carrierName}</h1>
+<time>{date}</time>
+<div>
+  <a href={producerPortal}>{producerPortal}</a>
+</div>
